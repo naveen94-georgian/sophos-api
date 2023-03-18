@@ -1,0 +1,65 @@
+spring:
+  application:
+    name: sophos-api
+  banner:
+    location: classpath:/banner.txt
+  datasource:
+    url: ${MSSQL_CONNECTION_STRING}
+    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+  jpa:
+    hibernate:
+      ddl-auto: ${JPA_DDL_AUTO}
+    database-platform: org.hibernate.dialect.SQLServerDialect
+  cloud:
+    azure:
+      active-directory:
+        enabled: true
+        profile:
+          tenant-id: ${SOPHOS_TENANT_ID}
+        credential:
+          client-id: ${SOPHOS_API_CLIENT_ID}
+          client-secret: ${SOPHOS_API_CLIENT_SECRET}
+        app-id-uri: ${SOPHOS_API_APP_ID_URI}
+        authorization-clients:
+          graph:
+            scopes:
+              - https://graph.microsoft.com/User.Read.All
+
+##### Server config #####
+server:
+  servlet:
+    context-path: /v1/api/
+  port: 8080
+
+##### SPRING ACTUATOR CONFIGS #####
+management:
+  endpoints:
+    web:
+      base-path: /ops
+  endpoint:
+    health:
+      enabled: true
+    info:
+      enabled: true
+    metrics:
+      enabled: true
+
+##### Swagger config #####
+springdoc:
+  api-docs:
+    path: /docs
+    enabled: ${ENABLE_SWAGGER:false}
+  swagger-ui:
+    enabled: ${ENABLE_SWAGGER:false}
+    path: /swagger
+
+app:
+  version: ^project.version^
+  name: ^project.name^
+  responsible-email: ${API_RESPONSIBLE_EMAIL:naveen.sellappanselvaraju@cgi.com}
+  responsible-name: ${API_RESPONSIBLE_NAME:Naveen, Selvaraju}
+
+##### LOGGING CONFIGS #####
+logging:
+  level:
+    root: info
