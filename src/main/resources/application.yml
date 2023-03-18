@@ -22,8 +22,11 @@ spring:
         app-id-uri: ${SOPHOS_API_APP_ID_URI}
         authorization-clients:
           graph:
-            scopes:
-              - https://graph.microsoft.com/User.Read.All
+            scopes: https://graph.microsoft.com/User.Read.All
+
+##### Auth header for graph #####
+auth:
+  header-name: ${AUTH_HEADER_NAME:authorization}
 
 ##### Server config #####
 server:
@@ -58,6 +61,11 @@ app:
   name: ^project.name^
   responsible-email: ${API_RESPONSIBLE_EMAIL:naveen.sellappanselvaraju@cgi.com}
   responsible-name: ${API_RESPONSIBLE_NAME:Naveen, Selvaraju}
+
+##### Banner Text #####
+application:
+  title: ^project.name^
+  version: ^project.version^
 
 ##### LOGGING CONFIGS #####
 logging:
