@@ -3,6 +3,7 @@ package com.cgi.sophos.controllers;
 import com.cgi.sophos.dto.GraphUserDto;
 import com.cgi.sophos.service.GraphService;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,5 +21,11 @@ public class GraphController {
   @GetMapping(name = "myInfo")
   public GraphUserDto myInfo(HttpServletRequest request) {
     return graphService.myInfo(request);
+  }
+
+  @ResponseStatus(HttpStatus.OK)
+  @GetMapping(name = "allInfo", value = "/all")
+  public List<GraphUserDto> allInfo(HttpServletRequest request) {
+    return graphService.allInfo(request);
   }
 }
