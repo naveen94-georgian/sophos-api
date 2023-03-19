@@ -11,13 +11,14 @@
 	<groupId>com.cgi</groupId>
 	<artifactId>sophos</artifactId>
 	<version>0.0.1</version>
-	<name>sophos</name>
+	<name>Sophos</name>
 	<description>CGI Absence planner </description>
 	<properties>
 		<java.version>17</java.version>
 		<spring-cloud-azure.version>5.0.0</spring-cloud-azure.version>
 		<spotless.version>2.22.8</spotless.version>
 		<googleJavaFormat.version>1.15.0</googleJavaFormat.version>
+		<resource.delimiter>^</resource.delimiter>
 	</properties>
 	<dependencies>
 		<!-- Spring dependencies -->

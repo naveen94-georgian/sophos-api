@@ -1,7 +1,7 @@
 package com.cgi.sophos.controllers;
 
+import com.cgi.sophos.dto.GraphUserDto;
 import com.cgi.sophos.service.GraphService;
-import com.microsoft.graph.models.User;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,8 +17,8 @@ public class GraphController {
   private final GraphService graphService;
 
   @ResponseStatus(HttpStatus.OK)
-  @GetMapping
-  public User myInfo(HttpServletRequest request) {
+  @GetMapping(name = "myInfo")
+  public GraphUserDto myInfo(HttpServletRequest request) {
     return graphService.myInfo(request);
   }
 }

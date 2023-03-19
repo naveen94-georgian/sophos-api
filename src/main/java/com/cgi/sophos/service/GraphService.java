@@ -1,7 +1,7 @@
 package com.cgi.sophos.service;
 
 import com.cgi.sophos.client.GraphClientBuilder;
-import com.microsoft.graph.models.User;
+import com.cgi.sophos.dto.GraphUserDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,8 +11,12 @@ import org.springframework.stereotype.Service;
 public class GraphService {
   private final GraphClientBuilder graphClientBuilder;
 
-  public User myInfo(HttpServletRequest request) {
+  public GraphUserDto myInfo(HttpServletRequest request) {
     var graphClient = graphClientBuilder.getClient(request);
-    return graphClient.me().buildRequest().get();
+    var user = graphClient.me().buildRequest().get();
+
+    return user != null
+        ? GraphUserDto.builder().id(user.id).displayName(user.displayName).build()
+        : null;
   }
 }

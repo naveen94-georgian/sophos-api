@@ -62,6 +62,11 @@ app:
   responsible-email: ${API_RESPONSIBLE_EMAIL:naveen.sellappanselvaraju@cgi.com}
   responsible-name: ${API_RESPONSIBLE_NAME:Naveen, Selvaraju}
 
+##### Banner Text #####
+application:
+  title: ^project.name^
+  version: ^project.version^
+
 ##### LOGGING CONFIGS #####
 logging:
   level:
