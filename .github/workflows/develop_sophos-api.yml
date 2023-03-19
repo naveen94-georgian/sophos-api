@@ -1,6 +1,3 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
 name: Build and deploy container app to Azure Web App - sophos-api
 
 on:
@@ -11,36 +8,34 @@ on:
 
 jobs:
   build:
-    runs-on: 'ubuntu-latest'
-
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@v3
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
 
-    - name: Build with Maven
-      run: mvn --batch-mode --update-snapshots package
+      - name: Build with Maven
+        run:  mvn --batch-mode --update-snapshots package
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Log in to registry
-      uses: docker/login-action@v1
-      with:
-        registry: https://sophos.azurecr.io/
-        username: ${{ secrets.AzureAppService_ContainerUsername_499f8538c6a449dd8143923c87dbe364 }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_8ea924e3ad0d49a29ac27533510f2810 }}
-
-    - name: Build and push container image to registry
-      uses: docker/build-push-action@v2
-      with:
-        push: true
-        tags: sophos.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_499f8538c6a449dd8143923c87dbe364 }}/sophos.azurecr.io/sophos-api:${{ github.sha }}
-        file: ./Dockerfile
+      - name: 'Build and push image'
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+      - run:  |
+          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/sophos-api:${{ github.sha }}
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/sophos-api:${{ github.sha }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -50,11 +45,12 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-    - name: Deploy to Azure Web App
-      id: deploy-to-webapp
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'sophos-api'
-        slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_3e52db85aa924f7cbf101ee84a556d73 }}
-        images: 'sophos.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_499f8538c6a449dd8143923c87dbe364 }}/sophos.azurecr.io/sophos-api:${{ github.sha }}'
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'sophos-api'
+          slot-name: 'production'
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_3e52db85aa924f7cbf101ee84a556d73 }}
+          images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/sophos-api:${{ github.sha }}
+
