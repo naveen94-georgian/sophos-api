@@ -13,30 +13,30 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Bean
-    public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
-        http.apply(AadResourceServerHttpSecurityConfigurer.aadResourceServer())
-                .and()
-                .csrf()
-                .disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/swagger-ui/**")
-                .permitAll()
-                .and()
-                .authorizeHttpRequests()
-                .requestMatchers("/docs/**")
-                .permitAll()
-                .and()
-                .authorizeHttpRequests()
-                .requestMatchers("/ops/**")
-                .permitAll()
-                .and()
-                .authorizeHttpRequests()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .oauth2ResourceServer()
-                .jwt();
-        return http.build();
-    }
+  @Bean
+  public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
+    http.apply(AadResourceServerHttpSecurityConfigurer.aadResourceServer())
+        .and()
+        .csrf()
+        .disable()
+        .authorizeHttpRequests()
+        .requestMatchers("/swagger-ui/**")
+        .permitAll()
+        .and()
+        .authorizeHttpRequests()
+        .requestMatchers("/docs/**")
+        .permitAll()
+        .and()
+        .authorizeHttpRequests()
+        .requestMatchers("/ops/**")
+        .permitAll()
+        .and()
+        .authorizeHttpRequests()
+        .anyRequest()
+        .authenticated()
+        .and()
+        .oauth2ResourceServer()
+        .jwt();
+    return http.build();
+  }
 }

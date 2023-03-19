@@ -10,13 +10,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenApiConfig {
 
-    @Bean
-    public OpenAPI openApi() {
-        var license = new License();
-        license.setName("All rights reserved - CGI Inc.");
+  @Bean
+  public OpenAPI openApi() {
+    var license = new License();
+    license.setName("All rights reserved - CGI Inc.");
 
-        return new OpenAPI()
-                .components(new Components())
-                .info(new Info().title("Sophos Absence Planner").license(license));
-    }
+    return new OpenAPI()
+        .components(new Components())
+        .info(new Info().title("Sophos Absence Planner").license(license));
+  }
 }

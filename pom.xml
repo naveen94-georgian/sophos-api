@@ -16,7 +16,8 @@
 	<properties>
 		<java.version>17</java.version>
 		<spring-cloud-azure.version>5.0.0</spring-cloud-azure.version>
-		<spotless.version>2.35.0</spotless.version>
+		<spotless.version>2.22.8</spotless.version>
+		<googleJavaFormat.version>1.15.0</googleJavaFormat.version>
 	</properties>
 	<dependencies>
 		<!-- Spring dependencies -->
@@ -58,6 +59,11 @@
 			<groupId>com.microsoft.graph</groupId>
 			<artifactId>microsoft-graph</artifactId>
 			<version>5.26.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>4.10.0</version>
 		</dependency>
 
 		<!-- Database dependencies -->
@@ -199,8 +205,8 @@
 				<configuration>
 					<java>
 						<googleJavaFormat>
-							<version>1.8</version>
-							<style>AOSP</style>
+							<version>${googleJavaFormat.version}</version>
+							<style>GOOGLE</style>
 							<reflowLongStrings>true</reflowLongStrings>
 						</googleJavaFormat>
 					</java>
