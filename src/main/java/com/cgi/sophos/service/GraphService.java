@@ -9,6 +9,8 @@ import com.microsoft.graph.models.User;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,13 @@ public class GraphService {
     return graphUserMapper.toDTO(user);
   }
 
+  public GraphUserDto getInfoById(@NotNull @NotEmpty String userId, HttpServletRequest request) {
+    var graphClient = graphClientBuilder.getClient(request);
+    var user = graphClient.users(userId).buildRequest().get();
+
+    return graphUserMapper.toDTO(user);
+  }
+
   public List<GraphUserDto> allInfo(HttpServletRequest request) {
     var graphClient = graphClientBuilder.getClient(request);
     var userIds =
@@ -32,13 +41,7 @@ public class GraphService {
             "890de6ad-0684-4b2a-a502-013bf98042d4",
             "2a6ed82a-a348-4019-9c75-e52a95437198");
 
-    var collectionPage =
-        graphClient
-            .users()
-            .buildRequest()
-            .filter(getUserIdFilter(userIds))
-            .select("id, displayName")
-            .get();
+    var collectionPage = graphClient.users().buildRequest().filter(getUserIdFilter(userIds)).get();
 
     List<User> users = collectionPage != null ? collectionPage.getCurrentPage() : emptyList();
     return graphUserMapper.map(users);
