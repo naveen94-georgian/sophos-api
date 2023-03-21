@@ -1,9 +1,8 @@
 package com.cgi.sophos.controllers;
 
-import com.cgi.sophos.dto.AdUserDto;
+import com.cgi.sophos.model.Member;
 import com.cgi.sophos.service.GraphService;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,13 +12,13 @@ public record GraphController(GraphService graphService) {
 
   @ResponseStatus(HttpStatus.OK)
   @GetMapping(value = "/whoami")
-  public AdUserDto myInfo(HttpServletRequest request) {
-    return graphService.myInfo(request);
+  public Member myInfo(HttpServletRequest request) {
+    return graphService.whoami(request);
   }
 
   @ResponseStatus(HttpStatus.OK)
   @GetMapping()
-  public AdUserDto getInfoById(@RequestParam("userid") String userId, HttpServletRequest request) {
-    return graphService.getInfoById(userId, request);
+  public Member getInfoById(@RequestParam("userid") String userId, HttpServletRequest request) {
+    return graphService.getMemberById(userId, request);
   }
 }

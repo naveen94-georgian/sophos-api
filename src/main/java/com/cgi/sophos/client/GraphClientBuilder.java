@@ -4,7 +4,6 @@ import com.azure.identity.OnBehalfOfCredential;
 import com.azure.identity.OnBehalfOfCredentialBuilder;
 import com.cgi.sophos.exception.UnauthorizedException;
 import com.microsoft.graph.authentication.TokenCredentialAuthProvider;
-import com.microsoft.graph.requests.GraphServiceClient;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +32,7 @@ public class GraphClientBuilder {
   @Value("${auth.header-name}")
   private String authHeaderName;
 
-  public GraphServiceClient<Request> getClient(HttpServletRequest request) {
+  public com.microsoft.graph.requests.GraphServiceClient<Request> getClient(HttpServletRequest request) {
     String authToken = getTokenFromHeader(request);
     if (StringUtils.isEmpty(authToken)) {
       log.error("No valid Authorization header present");
@@ -50,7 +49,7 @@ public class GraphClientBuilder {
     TokenCredentialAuthProvider tokenCredentialAuthProvider =
         new TokenCredentialAuthProvider(scopes, onBehalfOfCredential);
 
-    return GraphServiceClient.builder()
+    return com.microsoft.graph.requests.GraphServiceClient.builder()
         .authenticationProvider(tokenCredentialAuthProvider)
         .buildClient();
   }

@@ -1,9 +1,9 @@
-package com.cgi.sophos.dto;
+package com.cgi.sophos.model;
 
 import lombok.Data;
 
 @Data
-public class AdUserDto {
+public class AdUser {
   private String id;
   private String displayName;
   private String department;
@@ -13,7 +13,8 @@ public class AdUserDto {
   private String officeLocation;
   private String streetAddress;
   private String country;
+  private String mobilePhone;
   private String usageLocation;
   private String preferredLanguage;
-  AdUserDto manager;
+  //  AdUser manager;
 }
