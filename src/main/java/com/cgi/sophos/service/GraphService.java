@@ -1,56 +1,56 @@
 package com.cgi.sophos.service;
 
 import static com.cgi.sophos.mapper.Mappers.graphUserMapper;
-import static java.util.Collections.emptyList;
 
 import com.cgi.sophos.client.GraphClientBuilder;
-import com.cgi.sophos.dto.GraphUserDto;
-import com.microsoft.graph.models.User;
+import com.cgi.sophos.dto.AdUserDto;
+import com.microsoft.graph.options.HeaderOption;
+import com.microsoft.graph.options.Option;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.List;
+import java.lang.reflect.Field;
+import java.text.MessageFormat;
+import java.util.LinkedList;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
-public class GraphService {
-  private final GraphClientBuilder graphClientBuilder;
+public record GraphService(GraphClientBuilder graphClientBuilder) {
 
-  public GraphUserDto myInfo(HttpServletRequest request) {
+  public AdUserDto myInfo(HttpServletRequest request) {
     var graphClient = graphClientBuilder.getClient(request);
     var user = graphClient.me().buildRequest().get();
 
     return graphUserMapper.toDTO(user);
   }
 
-  public GraphUserDto getInfoById(@NotNull @NotEmpty String userId, HttpServletRequest request) {
+  public AdUserDto getInfoById(@NotNull @NotEmpty String userId, HttpServletRequest request) {
     var graphClient = graphClientBuilder.getClient(request);
+
     var user = graphClient.users(userId).buildRequest().get();
 
     return graphUserMapper.toDTO(user);
   }
 
-  public List<GraphUserDto> allInfo(HttpServletRequest request) {
+  public AdUserDto getAllDirectory(HttpServletRequest request) {
     var graphClient = graphClientBuilder.getClient(request);
-    var userIds =
-        List.of(
-            "e8d849b7-29b4-496d-a6e5-2421a4b7fc10",
-            "890de6ad-0684-4b2a-a502-013bf98042d4",
-            "2a6ed82a-a348-4019-9c75-e52a95437198");
+    LinkedList<Option> requestOptions = new LinkedList<Option>();
+    requestOptions.add(new HeaderOption("ConsistencyLevel", "eventual"));
 
-    var collectionPage = graphClient.users().buildRequest().filter(getUserIdFilter(userIds)).get();
+    var selectNames =
+        Stream.of(AdUserDto.class.getDeclaredFields())
+            .map(Field::getName)
+            .collect(Collectors.joining(","));
 
-    List<User> users = collectionPage != null ? collectionPage.getCurrentPage() : emptyList();
-    return graphUserMapper.map(users);
-  }
-
-  String getUserIdFilter(List<String> userIds) {
-    final String filterFormat = "id in (%s)";
-    String filterParams =
-        userIds.stream().map(m -> String.format("'%s'", m)).collect(Collectors.joining(","));
-    return String.format(filterFormat, filterParams);
+    var user =
+        graphClient
+            .me()
+            .buildRequest(requestOptions)
+            .expand(MessageFormat.format("manager($levels=max;$select={0})", selectNames))
+            .select(selectNames)
+            .get();
+    return graphUserMapper.toDTO(user);
   }
 }
