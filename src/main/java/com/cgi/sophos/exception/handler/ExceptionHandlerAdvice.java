@@ -1,7 +1,9 @@
-package com.cgi.sophos.config;
+package com.cgi.sophos.exception.handler;
 
+import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 import static org.zalando.problem.Status.UNAUTHORIZED;
 
+import com.cgi.sophos.exception.ServiceException;
 import com.cgi.sophos.exception.UnauthorizedException;
 import java.net.URI;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,18 @@ public class ExceptionHandlerAdvice implements ProblemHandling {
                 .withTitle("Unauthorized")
                 .withDetail(ex.getMessage())
                 .withStatus(UNAUTHORIZED)
+                .build());
+  }
+
+  @ExceptionHandler({ServiceException.class})
+  public ResponseEntity<Problem> handleServiceException(Exception ex) {
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(
+            Problem.builder()
+                .withType(URI.create("https://httpstatuses.com/500"))
+                .withTitle("Internal Server Error")
+                .withDetail(ex.getMessage())
+                .withStatus(INTERNAL_SERVER_ERROR)
                 .build());
   }
 }

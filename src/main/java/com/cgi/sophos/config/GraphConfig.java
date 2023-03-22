@@ -1,20 +1,25 @@
-package com.cgi.sophos.client;
+package com.cgi.sophos.config;
 
 import com.azure.identity.OnBehalfOfCredential;
 import com.azure.identity.OnBehalfOfCredentialBuilder;
-import com.cgi.sophos.exception.UnauthorizedException;
+import com.cgi.sophos.config.security.AuthenticationFacade;
 import com.microsoft.graph.authentication.TokenCredentialAuthProvider;
-import jakarta.servlet.http.HttpServletRequest;
+import com.microsoft.graph.requests.GraphServiceClient;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Request;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.context.annotation.RequestScope;
 
 @Slf4j
-@Component
-public class GraphClientBuilder {
+@Configuration
+@RequiredArgsConstructor
+public class GraphConfig {
+
+  private final AuthenticationFacade authenticationFacade;
 
   @Value("${spring.cloud.azure.active-directory.profile.tenant-id}")
   private String tenantId;
@@ -32,19 +37,15 @@ public class GraphClientBuilder {
   @Value("${auth.header-name}")
   private String authHeaderName;
 
-  public com.microsoft.graph.requests.GraphServiceClient<Request> getClient(HttpServletRequest request) {
-    String authToken = getTokenFromHeader(request);
-    if (StringUtils.isEmpty(authToken)) {
-      log.error("No valid Authorization header present");
-      throw new UnauthorizedException("No Authorization header present");
-    }
-
+  @Bean
+  @RequestScope
+  public GraphServiceClient<Request> graphClient() {
     OnBehalfOfCredential onBehalfOfCredential =
         new OnBehalfOfCredentialBuilder()
             .tenantId(this.tenantId)
             .clientId(this.clientId)
             .clientSecret(this.clientSecret)
-            .userAssertion(authToken)
+            .userAssertion(authenticationFacade.getAuthenticationToken())
             .build();
     TokenCredentialAuthProvider tokenCredentialAuthProvider =
         new TokenCredentialAuthProvider(scopes, onBehalfOfCredential);
@@ -52,19 +53,5 @@ public class GraphClientBuilder {
     return com.microsoft.graph.requests.GraphServiceClient.builder()
         .authenticationProvider(tokenCredentialAuthProvider)
         .buildClient();
-  }
-
-  String getTokenFromHeader(HttpServletRequest request) {
-    var authHeader = request.getHeader(authHeaderName);
-
-    // Enable request Auth header to contain Bearer or bearer
-    if (!StringUtils.isEmpty(authHeader)) {
-      if (authHeader.startsWith("Bearer ")) {
-        return authHeader.replace("Bearer", "").trim();
-      } else if (authHeader.startsWith("bearer ")) {
-        return authHeader.replace("bearer", "").trim();
-      }
-    }
-    return null;
   }
 }
