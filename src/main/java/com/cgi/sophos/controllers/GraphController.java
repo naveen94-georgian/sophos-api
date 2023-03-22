@@ -1,5 +1,6 @@
 package com.cgi.sophos.controllers;
 
+import com.cgi.sophos.exception.RestException;
 import com.cgi.sophos.model.Member;
 import com.cgi.sophos.service.MemberService;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,8 @@ public record GraphController(MemberService memberService) {
   @ResponseStatus(HttpStatus.OK)
   @GetMapping(value = "/whoami")
   public Member myInfo() {
-    return memberService.whoami();
+    throw new RestException("message.hello_user", "Naveen");
+    //    return memberService.whoami();
   }
 
   @ResponseStatus(HttpStatus.OK)

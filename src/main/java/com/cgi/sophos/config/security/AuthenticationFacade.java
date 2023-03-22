@@ -20,6 +20,6 @@ public class AuthenticationFacade {
         .filter(f -> f instanceof Jwt)
         .map(Jwt.class::cast)
         .map(Jwt::getTokenValue)
-        .orElseThrow(() -> new UnauthorizedException("Authorization token cannot be found."));
+        .orElseThrow(() -> new UnauthorizedException("error.token_not_found"));
   }
 }
