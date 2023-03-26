@@ -1,11 +1,19 @@
-package com.cgi.sophos.model;
+package com.cgi.sophos.member;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class AdUser {
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class Member {
   private String id;
   private String displayName;
+  private String givenName;
+  private String surname;
   private String department;
   private String employeeId;
   private String jobTitle;
@@ -16,5 +24,4 @@ public class AdUser {
   private String mobilePhone;
   private String usageLocation;
   private String preferredLanguage;
-  //  AdUser manager;
 }

@@ -51,4 +51,16 @@ public class ExceptionHandlerAdvice implements ProblemHandling {
                 .withStatus(INTERNAL_SERVER_ERROR)
                 .build());
   }
+
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<Problem> handleException(Exception ex, Locale locale) {
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(
+            Problem.builder()
+                .withType(URI.create("https://httpstatuses.com/500"))
+                .withTitle("Internal Server Error")
+                .withDetail(ex.getLocalizedMessage())
+                .withStatus(INTERNAL_SERVER_ERROR)
+                .build());
+  }
 }
