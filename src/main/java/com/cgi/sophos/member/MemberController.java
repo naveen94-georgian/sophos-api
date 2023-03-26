@@ -1,7 +1,5 @@
-package com.cgi.sophos.controllers;
+package com.cgi.sophos.member;
 
-import com.cgi.sophos.model.Member;
-import com.cgi.sophos.service.MemberService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import java.util.List;

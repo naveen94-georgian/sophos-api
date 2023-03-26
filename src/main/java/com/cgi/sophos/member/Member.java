@@ -1,4 +1,4 @@
-package com.cgi.sophos.model;
+package com.cgi.sophos.member;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
