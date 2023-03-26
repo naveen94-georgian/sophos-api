@@ -1,4 +1,4 @@
-package com.cgi.sophos.config.security;
+package com.cgi.sophos.common.config.security;
 
 import com.azure.spring.cloud.autoconfigure.implementation.aad.security.AadResourceServerHttpSecurityConfigurer;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package com.cgi.sophos.config;
+package com.cgi.sophos.common.config;
 
 import java.util.Locale;
 import org.springframework.context.MessageSource;

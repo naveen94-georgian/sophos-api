@@ -1,4 +1,4 @@
-package com.cgi.sophos.exception;
+package com.cgi.sophos.common.exception;
 
 import lombok.Getter;
 

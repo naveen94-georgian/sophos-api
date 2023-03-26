@@ -1,4 +1,4 @@
-package com.cgi.sophos.config;
+package com.cgi.sophos.common.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

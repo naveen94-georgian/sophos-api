@@ -22,7 +22,7 @@ public class MemberService {
   private final GraphServiceClient<Request> graphClient;
   private final MemberMapper memberMapper;
 
-  public Member getMember(String userId) {
+  public MemberDTO getMember(String userId) {
     var user =
         isNotEmpty(userId)
             ? graphClient.users(userId).buildRequest().select(getGraphFields()).get()
@@ -30,7 +30,7 @@ public class MemberService {
     return memberMapper.toMember(user);
   }
 
-  public Member getManager(String userId) {
+  public MemberDTO getManager(String userId) {
     var directoryObject =
         isNotEmpty(userId)
             ? graphClient.users(userId).manager().buildRequest().select(getGraphFields()).get()
@@ -38,7 +38,7 @@ public class MemberService {
     return memberMapper.toMember((User) directoryObject);
   }
 
-  public List<Member> getDirectReports(String userId) {
+  public List<MemberDTO> getDirectReports(String userId) {
     var userCollectionPage =
         isNotEmpty(userId)
             ? graphClient
@@ -52,7 +52,7 @@ public class MemberService {
     return convertCollectionPageToMemberList(userCollectionPage);
   }
 
-  public List<Member> lookUp(String email, String givenName, String surname) {
+  public List<MemberDTO> lookUp(String email, String givenName, String surname) {
     String filter = null;
     if (isNotEmpty(email)) {
       filter = String.format("mail eq '%s'", email);
@@ -72,7 +72,7 @@ public class MemberService {
     return emptyList();
   }
 
-  List<Member> convertCollectionPageToMemberList(UserCollectionPage page) {
+  List<MemberDTO> convertCollectionPageToMemberList(UserCollectionPage page) {
     List<User> users = new ArrayList<>();
     while (page != null) {
       users.addAll(page.getCurrentPage());
@@ -82,7 +82,7 @@ public class MemberService {
   }
 
   String getGraphFields() {
-    return Stream.of(Member.class.getDeclaredFields())
+    return Stream.of(MemberDTO.class.getDeclaredFields())
         .map(Field::getName)
         .collect(Collectors.joining(","));
   }

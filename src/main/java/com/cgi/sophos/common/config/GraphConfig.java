@@ -1,8 +1,8 @@
-package com.cgi.sophos.config;
+package com.cgi.sophos.common.config;
 
 import com.azure.identity.OnBehalfOfCredential;
 import com.azure.identity.OnBehalfOfCredentialBuilder;
-import com.cgi.sophos.config.security.AuthenticationFacade;
+import com.cgi.sophos.common.config.security.AuthenticationFacade;
 import com.microsoft.graph.authentication.TokenCredentialAuthProvider;
 import com.microsoft.graph.requests.GraphServiceClient;
 import java.util.List;

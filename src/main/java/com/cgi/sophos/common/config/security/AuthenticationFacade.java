@@ -1,6 +1,6 @@
-package com.cgi.sophos.config.security;
+package com.cgi.sophos.common.config.security;
 
-import com.cgi.sophos.exception.UnauthorizedException;
+import com.cgi.sophos.common.exception.UnauthorizedException;
 import java.util.Optional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;

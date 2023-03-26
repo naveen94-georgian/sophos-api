@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Member {
+public class MemberDTO {
   private String id;
   private String displayName;
   private String givenName;

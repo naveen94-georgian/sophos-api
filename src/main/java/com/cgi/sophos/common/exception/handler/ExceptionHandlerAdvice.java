@@ -1,12 +1,14 @@
-package com.cgi.sophos.exception.handler;
+package com.cgi.sophos.common.exception.handler;
 
 import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 import static org.zalando.problem.Status.UNAUTHORIZED;
 
-import com.cgi.sophos.exception.RestException;
-import com.cgi.sophos.exception.UnauthorizedException;
+import com.cgi.sophos.common.exception.UnauthorizedException;
+import com.cgi.sophos.common.exception.RestException;
+
 import java.net.URI;
 import java.util.Locale;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
