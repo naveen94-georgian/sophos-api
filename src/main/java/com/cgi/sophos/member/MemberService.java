@@ -3,6 +3,7 @@ package com.cgi.sophos.member;
 import static java.util.Collections.emptyList;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
+import com.cgi.sophos.common.config.LocalGraphClient;
 import com.microsoft.graph.models.User;
 import com.microsoft.graph.requests.GraphServiceClient;
 import com.microsoft.graph.requests.UserCollectionPage;
@@ -19,35 +20,35 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MemberService {
 
-  private final GraphServiceClient<Request> graphClient;
+  private final LocalGraphClient graphClient;
   private final MemberMapper memberMapper;
 
   public MemberDTO getMember(String userId) {
     var user =
         isNotEmpty(userId)
-            ? graphClient.users(userId).buildRequest().select(getGraphFields()).get()
-            : graphClient.me().buildRequest().select(getGraphFields()).get();
+            ? graphClient.getClient().users(userId).buildRequest().select(getGraphFields()).get()
+            : graphClient.getClient().me().buildRequest().select(getGraphFields()).get();
     return memberMapper.toMember(user);
   }
 
   public MemberDTO getManager(String userId) {
     var directoryObject =
         isNotEmpty(userId)
-            ? graphClient.users(userId).manager().buildRequest().select(getGraphFields()).get()
-            : graphClient.me().manager().buildRequest().select(getGraphFields()).get();
+            ? graphClient.getClient().users(userId).manager().buildRequest().select(getGraphFields()).get()
+            : graphClient.getClient().me().manager().buildRequest().select(getGraphFields()).get();
     return memberMapper.toMember((User) directoryObject);
   }
 
   public List<MemberDTO> getDirectReports(String userId) {
     var userCollectionPage =
         isNotEmpty(userId)
-            ? graphClient
+            ? graphClient.getClient()
                 .users(userId)
                 .directReportsAsUser()
                 .buildRequest()
                 .select(getGraphFields())
                 .get()
-            : graphClient.me().directReportsAsUser().buildRequest().select(getGraphFields()).get();
+            : graphClient.getClient().me().directReportsAsUser().buildRequest().select(getGraphFields()).get();
 
     return convertCollectionPageToMemberList(userCollectionPage);
   }
@@ -66,7 +67,7 @@ public class MemberService {
 
     if (isNotEmpty(filter)) {
       var userPage =
-          graphClient.users().buildRequest().filter(filter).select(getGraphFields()).get();
+              graphClient.getClient().users().buildRequest().filter(filter).select(getGraphFields()).get();
       return convertCollectionPageToMemberList(userPage);
     }
     return emptyList();
